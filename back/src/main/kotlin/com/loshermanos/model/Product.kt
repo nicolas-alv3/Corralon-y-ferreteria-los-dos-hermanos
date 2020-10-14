@@ -1,6 +1,8 @@
 package com.loshermanos.model
 
 import javax.persistence.Entity
+import javax.validation.constraints.PositiveOrZero
+import javax.validation.constraints.Size
 
 @Entity
 class Product(
