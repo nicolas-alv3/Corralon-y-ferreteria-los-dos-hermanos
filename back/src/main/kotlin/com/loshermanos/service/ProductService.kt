@@ -1,6 +1,6 @@
 package com.loshermanos.service
 
-import com.loshermanos.controller.SaleItemDTO
+import com.loshermanos.controller.dto.SaleItemDTO
 import com.loshermanos.model.Product
 import com.loshermanos.persistence.ProductDAO
 import com.loshermanos.service.exception.ProductAlreadyExistException
@@ -14,7 +14,7 @@ import javax.transaction.Transactional
 @Scope(value = "session")
 @Component(value = "productService")
 class ProductService(val productDAO: ProductDAO) {
-    @Transactional
+
     fun save(product: Product): Product {
         if(productDAO.findByBarCode(product.barcode).isPresent)
             throw ProductAlreadyExistException("Ya existe un producto con ese codigo de barras")

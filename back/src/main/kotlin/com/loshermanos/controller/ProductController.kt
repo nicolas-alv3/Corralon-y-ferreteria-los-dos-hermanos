@@ -1,5 +1,7 @@
 package com.loshermanos.controller
 
+import com.loshermanos.controller.dto.SaleItemDTO
+import com.loshermanos.controller.dto.StockDTO
 import com.loshermanos.model.Product
 import com.loshermanos.service.ProductService
 import com.loshermanos.service.exception.InvalidProductException
@@ -59,7 +61,7 @@ class ProductController (val productService: ProductService){
     }
 
     @PostMapping("/product/stock")
-    fun alterStock(@RequestBody stockDTO:StockDTO): ResponseEntity<Product> {
+    fun alterStock(@RequestBody stockDTO: StockDTO): ResponseEntity<Product> {
         return ResponseEntity(productService.alterStock(stockDTO.id,stockDTO.amount,stockDTO.add),HttpStatus.OK)
     }
 

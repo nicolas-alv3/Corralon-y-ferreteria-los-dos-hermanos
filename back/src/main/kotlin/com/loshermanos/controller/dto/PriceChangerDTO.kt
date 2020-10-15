@@ -1,4 +1,4 @@
-package com.loshermanos.controller
+package com.loshermanos.controller.dto
 
 import com.loshermanos.model.ProductCategory
 

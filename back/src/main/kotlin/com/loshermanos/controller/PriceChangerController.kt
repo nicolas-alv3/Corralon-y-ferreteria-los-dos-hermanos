@@ -1,5 +1,6 @@
 package com.loshermanos.controller
 
+import com.loshermanos.controller.dto.PriceChangerDTO
 import com.loshermanos.model.Product
 import com.loshermanos.service.PriceChangerService
 import org.springframework.context.annotation.Scope

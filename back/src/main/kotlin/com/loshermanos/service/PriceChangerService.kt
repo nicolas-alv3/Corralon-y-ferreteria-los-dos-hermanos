@@ -1,6 +1,5 @@
 package com.loshermanos.service
 
-import com.loshermanos.controller.SaleItemDTO
 import com.loshermanos.model.PriceChanger
 import com.loshermanos.model.Product
 import com.loshermanos.model.ProductCategory

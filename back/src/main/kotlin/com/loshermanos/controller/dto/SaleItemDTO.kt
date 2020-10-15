@@ -1,4 +1,4 @@
-package com.loshermanos.controller
+package com.loshermanos.controller.dto
 
 class SaleItemDTO(val id : Long,val amount :Long) {
 
