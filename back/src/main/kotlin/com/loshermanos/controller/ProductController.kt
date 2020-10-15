@@ -17,7 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @Scope(value = "session")
 @Component(value = "productController")
 class ProductController (val productService: ProductService){
-    //ControllerAdvice catch the exceptions and throws the corresponding error, we save lot of ifs.
+    //ControllerAdvice catch the exceptions and throws the corresponding error, saves lot of ifs.
     @ControllerAdvice
     class ControllerAdviceRequestError : ResponseEntityExceptionHandler() {
         @ExceptionHandler(value = [(LosHermanosException::class)])

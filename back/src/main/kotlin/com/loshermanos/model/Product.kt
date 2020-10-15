@@ -16,11 +16,11 @@ class Product(
     }
 
     fun increasePriceByPorcentage(porcentage:Double) {
-        price += price * (porcentage / 100)
+        price = Math.floor(price + price * (porcentage / 100))
     }
 
     fun decreasePriceByPorcentage(porcentage: Double) {
-        price -= price * (porcentage / 100)
+        price = Math.floor(price - price * (porcentage / 100))
     }
 
     fun addStock(amount: Long) {

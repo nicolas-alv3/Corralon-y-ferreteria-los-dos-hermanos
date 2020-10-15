@@ -1,6 +1,7 @@
 package com.loshermanos.persistence
 
 import com.loshermanos.model.Product
+import com.loshermanos.model.ProductCategory
 import com.loshermanos.persistence.repository.ProductRepository
 import org.springframework.stereotype.Component
 import java.util.*
@@ -29,6 +30,10 @@ class ProductDAO(val productRepository: ProductRepository) {
 
     fun saveAll(products: List<Product>): List<Product> {
         return productRepository.saveAll(products)
+    }
+
+    fun getAllOfCategory(category: ProductCategory): List<Product> {
+        return productRepository.findAllByCategory(category)
     }
 
 }
