@@ -6,6 +6,7 @@ import com.loshermanos.persistence.ProductDAO
 import com.loshermanos.service.exception.ProductAlreadyExistException
 import com.loshermanos.service.exception.ProductNotFound
 import org.springframework.context.annotation.Scope
+import org.springframework.data.domain.Page
 import org.springframework.stereotype.Component
 import java.util.*
 import javax.transaction.Transactional
@@ -86,5 +87,9 @@ class ProductService(val productDAO: ProductDAO) {
         } else
             product.substractStock(amount)
         return productDAO.save(product)
+    }
+
+    fun getByPage(page: Integer): Page<Product> {
+        return productDAO.getByPage(page)
     }
 }

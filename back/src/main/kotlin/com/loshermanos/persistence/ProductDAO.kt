@@ -48,4 +48,9 @@ class ProductDAO(val productRepository: ProductRepository) {
         return productRepository.findAllByIdOrBarcodeOrDescription(data,pagination)
     }
 
+    fun getByPage(page: Integer): Page<Product> {
+        val pagination: Pageable = PageRequest.of(page.toInt()-1, 10)
+        return productRepository.findAll(pagination)
+    }
+
 }

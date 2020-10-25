@@ -7,6 +7,7 @@ import com.loshermanos.service.ProductService
 import com.loshermanos.service.exception.InvalidProductException
 import com.loshermanos.service.exception.LosHermanosException
 import org.springframework.context.annotation.Scope
+import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
@@ -53,6 +54,11 @@ class ProductController (val productService: ProductService){
     @GetMapping("/product/all")
     fun getAllProducts(): ResponseEntity<List<Product>> {
         return ResponseEntity(productService.getAll(),HttpStatus.OK)
+    }
+
+    @GetMapping("/product/all/{page}")
+    fun getAllByPage(@PathVariable page: Integer): ResponseEntity<Page<Product>> {
+        return ResponseEntity(productService.getByPage(page),HttpStatus.OK)
     }
 
     @PostMapping("/product/sale")
