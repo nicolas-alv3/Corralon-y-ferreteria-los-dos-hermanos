@@ -1,0 +1,14 @@
+.navbar-search{
+    height: 40px;
+    margin: auto;
+}
+
+.navbar-search-container{
+    display: flex;
+    width: 300px;
+    transition: width 1s !important;
+}
+
+.navbar-search-container:focus-within{
+    width: 450px;
+}
