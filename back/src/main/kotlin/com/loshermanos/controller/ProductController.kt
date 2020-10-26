@@ -71,6 +71,11 @@ class ProductController (val productService: ProductService){
         return ResponseEntity(productService.alterStock(stockDTO.id,stockDTO.amount,stockDTO.add),HttpStatus.OK)
     }
 
+    @PostMapping("/product/delete/{id}")
+    fun deleteProduct(@PathVariable id:Long) : ResponseEntity<Product> {
+        return ResponseEntity(productService.delete(id),HttpStatus.OK)
+    }
+
     private fun checkValidProduct(product: Product) {
         if (
             !(product.description.length >= 4 && product.description.length < 100 &&

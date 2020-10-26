@@ -53,4 +53,8 @@ class ProductDAO(val productRepository: ProductRepository) {
         return productRepository.findAll(pagination)
     }
 
+    fun delete(id: Long) {
+        return productRepository.deleteById(id)
+    }
+
 }

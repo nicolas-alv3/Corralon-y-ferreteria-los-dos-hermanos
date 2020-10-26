@@ -92,4 +92,10 @@ class ProductService(val productDAO: ProductDAO) {
     fun getByPage(page: Integer): Page<Product> {
         return productDAO.getByPage(page)
     }
+
+    fun delete(id: Long): Product {
+        val p: Product = findById(id)
+        productDAO.delete(id)
+        return p
+    }
 }
