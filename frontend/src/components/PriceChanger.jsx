@@ -40,7 +40,6 @@ export default function PriceChanger() {
     API.get('/product/all')
       .then((res) => setProducts(res))
       .catch((e) => console.log(e));
-    console.log('GETIE');
   }, []);
 
   return (

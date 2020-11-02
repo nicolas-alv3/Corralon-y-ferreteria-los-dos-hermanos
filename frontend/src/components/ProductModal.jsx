@@ -15,21 +15,11 @@ const options = [
 
 export default function ProductModal(props) {
   const [open, setOpen] = React.useState(false);
-  const [description, setDescription] = React.useState('');
-  const [barcode, setBarcode] = React.useState(0);
-  const [price, setPrice] = React.useState(0);
-  const [stock, setStock] = React.useState(0);
-  const [category, setCategory] = React.useState();
-
-  useEffect(() => {
-    if (!props.add) {
-      setDescription(props.product.description);
-      setBarcode(props.product.barcode);
-      setPrice(props.product.price);
-      setStock(props.product.stock);
-      setCategory(props.product.category);
-    }
-  }, [props]);
+  const [description, setDescription] = React.useState(props.add ? '' : props.product.description);
+  const [barcode, setBarcode] = React.useState(props.add ? 0 : props.product.barcode);
+  const [price, setPrice] = React.useState(props.add ? 0 : props.product.price);
+  const [stock, setStock] = React.useState(props.add ? 0 : props.product.stock);
+  const [category, setCategory] = React.useState(props.add ? '' : props.product.category);
 
   const done = () => {
     setOpen(false);
@@ -95,7 +85,7 @@ export default function ProductModal(props) {
               <Form.Input fluid label="Descripción" placeholder="Descripción" value={description} onChange={(e) => setDescription(e.target.value)} />
             </Form.Group>
             <Form.Group widths="equal">
-              <Form.Input type="number" label="Codigo de barras" placeholder="Codigo de barras" value={barcode} onChange={(e) => setBarcode(e.target.value)} />
+              <Form.Input disabled={!props.add} type="number" label="Codigo de barras" placeholder="Codigo de barras" value={barcode} onChange={(e) => setBarcode(e.target.value)} />
               <Form.Input
                 label="Precio"
                 placeholder="Precio"
