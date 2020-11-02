@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Button, Form, Modal, Label,
 } from 'semantic-ui-react';
@@ -13,7 +13,7 @@ const options = [
   { key: 'v', text: 'Varios', value: 'VARIOS' },
 ];
 
-function AddProductModal(props) {
+export default function ProductModal(props) {
   const [open, setOpen] = React.useState(false);
   const [description, setDescription] = React.useState('');
   const [barcode, setBarcode] = React.useState(0);
@@ -21,14 +21,28 @@ function AddProductModal(props) {
   const [stock, setStock] = React.useState(0);
   const [category, setCategory] = React.useState();
 
-  const created = () => {
+  useEffect(() => {
+    if (!props.add) {
+      setDescription(props.product.description);
+      setBarcode(props.product.barcode);
+      setPrice(props.product.price);
+      setStock(props.product.stock);
+      setCategory(props.product.category);
+    }
+  }, [props]);
+
+  const done = () => {
     setOpen(false);
     setBarcode(0);
     setPrice(0);
     setStock(0);
     setDescription('');
     setCategory('');
-    props.successFeedback('Se ha agregado el producto correctamente');
+    if (props.add) {
+      props.successFeedback('Se ha agregado el producto correctamente');
+    } else {
+      props.successFeedback('Se ha actualizado el producto correctamente');
+    }
   };
 
   const error = (e) => {
@@ -37,16 +51,30 @@ function AddProductModal(props) {
   };
 
   const postProduct = () => {
-    const body = {
-      description,
-      barcode,
-      category,
-      price,
-      stock,
-    };
-    API.post('/product', body)
-      .then((res) => created(res))
-      .catch((e) => error(e));
+    if (props.add) {
+      const body = {
+        description,
+        barcode,
+        category,
+        price,
+        stock,
+      };
+      API.post('/product', body)
+        .then((res) => done(res))
+        .catch((e) => error(e));
+    } else {
+      const body = {
+        id: props.product.id,
+        description,
+        barcode,
+        category,
+        price,
+        stock,
+      };
+      API.put('/product', body)
+        .then((res) => done(res))
+        .catch((e) => error(e));
+    }
   };
 
   const formEnabled = category !== '' && barcode > 0 && stock >= 0 && category && price > 0 && description;
@@ -59,7 +87,7 @@ function AddProductModal(props) {
       dimmer="blurring"
       trigger={props.button}
     >
-      <Modal.Header>Agregar producto</Modal.Header>
+      <Modal.Header>{ props.add ? 'Agregar producto' : 'Editar producto'}</Modal.Header>
       <Modal.Content>
         <Modal.Description>
           <Form>
@@ -107,7 +135,7 @@ function AddProductModal(props) {
           Cancelar
         </Button>
         <Button
-          content="Agregar"
+          content={props.add ? 'Agregar' : 'Actualizar'}
           labelPosition="right"
           icon="checkmark"
           disabled={!formEnabled}
@@ -118,5 +146,3 @@ function AddProductModal(props) {
     </Modal>
   );
 }
-
-export default AddProductModal;

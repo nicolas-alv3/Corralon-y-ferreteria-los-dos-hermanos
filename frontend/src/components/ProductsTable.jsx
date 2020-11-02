@@ -10,10 +10,12 @@ import SanitariosIcon from '../icons/sanitarios.png';
 import OthersIcon from '../icons/question.png';
 import BuloneraIcon from '../icons/bulonera.png';
 import API from '../service/api';
+import EditProductModal from './ProductModal';
 import { parsePesos } from '../utils/utils.js';
 import '../style/Pagination.css';
+import WithFeedback from './Feedback';
 
-export default class ProductsTable extends React.Component {
+class ProductsTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -83,7 +85,13 @@ export default class ProductsTable extends React.Component {
             {parsePesos(p.price.toString())}
           </Table.Cell>
           <Table.Cell collapsing>
-            <Icon name="edit" color="blue" size="large" style={{ margin: '0 15px' }} />
+            <EditProductModal
+              add={false}
+              errorFeedback={this.props.errorFeedback}
+              successFeedback={this.props.successFeedback}
+              product={p}
+              button={<Button><Icon name="edit" color="blue" size="large" style={{ margin: '0 5px' }} /></Button>}
+            />
             <Dialog
               title="¿Estas seguro?"
               message={`Borraremos ${p.description} de forma permanente...`}
@@ -151,3 +159,4 @@ export default class ProductsTable extends React.Component {
     );
   }
 }
+export default WithFeedback(ProductsTable);
