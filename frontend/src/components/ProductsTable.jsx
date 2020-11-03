@@ -10,7 +10,7 @@ import SanitariosIcon from '../icons/sanitarios.png';
 import OthersIcon from '../icons/question.png';
 import BuloneraIcon from '../icons/bulonera.png';
 import API from '../service/api';
-import EditProductModal from './ProductModal';
+import ProductModal from './ProductModal';
 import { parsePesos } from '../utils/utils.js';
 import '../style/Pagination.css';
 import WithFeedback from './Feedback';
@@ -56,7 +56,7 @@ function ProductsTable(props) {
           {parsePesos(p.price.toString())}
         </Table.Cell>
         <Table.Cell collapsing>
-          <EditProductModal
+          <ProductModal
             add={false}
             errorFeedback={props.errorFeedback}
             successFeedback={props.successFeedback}
@@ -101,8 +101,14 @@ function ProductsTable(props) {
       <Segment placeholder>
         <Header icon>
           <Icon name="clipboard list" />
-          Aún no tienes productos. ¿Comenzamos?
+          {props.isEmptyMessage}
         </Header>
+        <ProductModal
+          successFeedback={props.successFeedback}
+          errorFeedback={props.errorFeedback}
+          add
+          button={<Button icon="add" size="big" color="blue" style={{ padding: "10px 20px" }}>Agregar</Button>}
+        />
       </Segment>
     );
   };

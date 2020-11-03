@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button, Container, Header, Pagination,
 } from 'semantic-ui-react';
@@ -9,9 +9,9 @@ import WithFeedback from './Feedback';
 import API from '../service/api';
 
 function Products(props) {
-  const [products, setProducts] = React.useState([]);
-  const [page, setPage] = React.useState(1);
-  const [totalPages, setTotalPages] = React.useState(1);
+  const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     API.get(`/product/all/${page}`)
@@ -20,7 +20,12 @@ function Products(props) {
         setTotalPages(res.totalPages);
       })
       .catch((e) => console.log(e));
-  }, [products, totalPages, page]);
+  }, [page, products.length]);
+
+  const successFeedback = (message) => {
+    setProducts([]);
+    props.successFeedback(message);
+  };
 
   return (
     <div>
@@ -30,7 +35,7 @@ function Products(props) {
           Productos
         </Header>
         <AddProductModal
-          successFeedback={props.successFeedback}
+          successFeedback={successFeedback}
           errorFeedback={props.errorFeedback}
           add
           button={<Button circular icon="add" size="big" color="blue" style={{ float: 'right' }} />}
@@ -38,8 +43,9 @@ function Products(props) {
         <hr />
         <ProductsTable
           products={products}
-          successFeedback={props.successFeedback}
+          successFeedback={successFeedback}
           errorFeedback={props.errorFeedback}
+          isEmptyMessage="Aún no tienes productos. ¿Comenzamos?"
         />
         <div className="pagination-container">
           <Pagination

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Button, Form, Modal, Label,
 } from 'semantic-ui-react';

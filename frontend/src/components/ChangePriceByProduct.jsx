@@ -57,7 +57,6 @@ function ChangeByProduct(props) {
       porcentage,
       category: 'FERRETERIA',
     };
-    console.log(body);
     API.post(`/priceChanger/${increaseOrDecrease}/all`, body)
       .then((res) => props.successFeedback(`Se han cambiado ${res.length} precios`))
       .catch((e) => console.log(e.response.data));
@@ -77,7 +76,11 @@ function ChangeByProduct(props) {
               </Form.Input>
               <Form.Input type="number" labelPosition="right" placeholder="Porcentaje" value={porcentage} onChange={(e) => setPorcentage(e.target.value)}><input /><Label>%</Label></Form.Input>
               <Button.Group>
-                <Button color={colorFor(aumentar)} onClick={() => setAumentar(true)}>Aumentar</Button>
+                <Button
+                  color={colorFor(aumentar)}
+                  onClick={() => setAumentar(true)}
+                >Aumentar
+                </Button>
                 <Button.Or text="O">O</Button.Or>
                 <Button
                   color={colorFor(!aumentar)}
