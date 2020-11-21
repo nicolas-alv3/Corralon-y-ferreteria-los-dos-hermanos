@@ -6,6 +6,7 @@ const adapt = (ls) => ls.map((e) => ({
   key: e.id,
   title: e.description,
   price: parsePesos(e.price.toString()),
+  stock: e.stock,
 }));
 
 export default function SearchByName(props) {
@@ -18,7 +19,9 @@ export default function SearchByName(props) {
       setValue(e.target.value);
       setProducts(adapt(
         props.products.filter(
-          (el) => el.description.toLowerCase().includes(e.target.value),
+          (el) => el.description.toLowerCase().includes(e.target.value)
+          || el.id.toString().includes(e.target.value)
+          || el.barcode.toString().includes(e.target.value),
         ),
       ));
     }
@@ -26,6 +29,7 @@ export default function SearchByName(props) {
 
   return (
     <Search
+      placeholder="Busque un producto"
       loading={loading}
       onResultSelect={(e, data) => props.onSelect(data)}
       noResultsMessage="Hmm... pueba con otra busqueda:)"

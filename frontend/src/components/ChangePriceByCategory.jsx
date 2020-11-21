@@ -43,7 +43,7 @@ function ItemCard(props) {
 
 function ChangeByCategory(props) {
   const [aumentar, setAumentar] = React.useState(true);
-  const [porcentage, setPorcentage] = React.useState(0);
+  const [porcentage, setPorcentage] = React.useState(10);
   const [category, setCategory] = React.useState('');
   const [products, setProducts] = React.useState([]);
   const mapProducts = () => products.map((p) => (
@@ -51,11 +51,19 @@ function ChangeByCategory(props) {
       <ItemCard product={p} porcentage={porcentage} aumentar={aumentar} />
     </List.Item>
   ));
+  const formDisabled = porcentage <= 0 || porcentage >= 100;
   const handleChangeCategory = (cat) => {
     setCategory(cat);
     API.get(`/product/byCategory/${cat}`)
       .then((res) => setProducts(res))
       .catch((e) => console.log(e));
+  };
+
+  const done = () => {
+    props.successFeedback(`Perfecto, se han cambiado ${products.length} precios`);
+    setTimeout(() => {
+      props.history.push('/products');
+    }, 2000);
   };
   const changePrice = () => {
     const body = {
@@ -64,7 +72,7 @@ function ChangeByCategory(props) {
       porcentage,
     };
     API.post('/priceChanger/increase/category', body)
-      .then(() => props.successFeedback(`Perfecto, se han cambiado ${products.length} precios`))
+      .then(() => done())
       .catch((e) => props.errorFeedback(e.response.data));
   };
   if (props.visible) {
@@ -81,25 +89,32 @@ function ChangeByCategory(props) {
               />
               <Form.Input
                 type="number"
+                label="Porcentaje:"
                 labelPosition="right"
                 placeholder="Porcentaje"
+                error={formDisabled}
                 onChange={(e) => setPorcentage(e.target.value)}
               ><input /><Label>%</Label>
               </Form.Input>
-              <Button.Group>
-                <Button
-                  color={colorFor(aumentar)}
-                  onClick={() => setAumentar(true)}
-                >
-                  Aumentar
-                </Button>
-                <Button.Or text="O">O</Button.Or>
-                <Button
-                  color={colorFor(!aumentar)}
-                  onClick={() => setAumentar(false)}
-                >Disminuir
-                </Button>
-              </Button.Group>
+              <Form.Field>
+                <label>Elija una de las dos</label>
+                <Button.Group>
+                  <Button
+                    color={colorFor(aumentar)}
+                    onClick={() => setAumentar(true)}
+                    style={{ boxShadow: `${aumentar ? '-3px 3px 1px lightgray' : ''}` }}
+                  >
+                    Aumentar
+                  </Button>
+                  <Button.Or text="O">O</Button.Or>
+                  <Button
+                    color={colorFor(!aumentar)}
+                    onClick={() => setAumentar(false)}
+                    style={{ boxShadow: `${!aumentar ? '3px 3px 1px lightgray' : ''}` }}
+                  >Disminuir
+                  </Button>
+                </Button.Group>
+              </Form.Field>
             </Form.Group>
           </Form>
           <List>
@@ -108,7 +123,7 @@ function ChangeByCategory(props) {
           <p> {products.length ? '' : `No hay productos de la categoria ${category}`}</p>
         </Segment>
         <div style={{ display: 'block', margin: 'auto', width: '200px' }}>
-          <Button size="big" color="green" onClick={() => changePrice()}>Finalizar</Button>
+          <Button size="big" color="green" onClick={() => changePrice()} disabled={formDisabled}>Finalizar</Button>
         </div>
       </div>
     );

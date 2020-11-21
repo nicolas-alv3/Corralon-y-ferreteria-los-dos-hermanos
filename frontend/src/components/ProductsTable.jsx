@@ -42,9 +42,9 @@ function ProductsTable(props) {
 
   const maprows = () => props.products.map(
     (p) => (
-      <Table.Row>
+      <Table.Row key={p.id.toString() + p.description + p.stock.toString() + p.price.toString() + p.category}>
         <Table.Cell collapsing>
-          {p.barcode}
+          {p.barcode > 0 ? p.barcode : p.id}
         </Table.Cell>
         <Table.Cell>{p.description}</Table.Cell>
         <Table.Cell collapsing>
@@ -61,14 +61,13 @@ function ProductsTable(props) {
             errorFeedback={props.errorFeedback}
             successFeedback={props.successFeedback}
             product={p}
-            button={<Button><Icon name="edit" color="blue" size="large" style={{ margin: '0 5px' }} /></Button>}
+            button={<Button icon="edit" color="blue" size="big" inverted />}
           />
           <Dialog
             title="¿Estas seguro?"
             message={`Borraremos ${p.description} de forma permanente...`}
             callback={() => deleteProduct(p)}
-            product={p}
-            button={<Button><Icon name="delete" color="red" size="large" style={{ margin: '0 5px' }} /></Button>}
+            button={<Button icon="delete" color="red" size="big" inverted />}
           />
         </Table.Cell>
       </Table.Row>
@@ -78,7 +77,7 @@ function ProductsTable(props) {
   const renderTableOrFeedback = () => {
     if (props.products.length > 0) {
       return (
-        <Table celled striped>
+        <Table celled striped style={{ marginTop: '30px' }}>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>Código</Table.HeaderCell>
@@ -107,7 +106,7 @@ function ProductsTable(props) {
           successFeedback={props.successFeedback}
           errorFeedback={props.errorFeedback}
           add
-          button={<Button icon="add" size="big" color="blue" style={{ padding: "10px 20px" }}>Agregar</Button>}
+          button={<Button icon="add" size="big" color="blue" style={{ padding: '10px 20px' }}>Agregar</Button>}
         />
       </Segment>
     );

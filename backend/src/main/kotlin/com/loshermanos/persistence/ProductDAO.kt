@@ -44,8 +44,12 @@ class ProductDAO(val productRepository: ProductRepository) {
     }
 
     fun search(data: String, page: Integer): Page<Product> {
-        val pagination: Pageable = PageRequest.of(page.toInt(), 10)
-        return productRepository.findAllByIdOrBarcodeOrDescription(data,pagination)
+        val pagination: Pageable = PageRequest.of(page.toInt() -1, 10)
+        var code : Long
+        try {
+            code = data.toLong()
+        }catch (e:Exception){ code=-2}
+        return productRepository.findByNameOrCode(data,code,pagination)
     }
 
     fun getByPage(page: Integer): Page<Product> {
@@ -55,6 +59,10 @@ class ProductDAO(val productRepository: ProductRepository) {
 
     fun delete(id: Long) {
         return productRepository.deleteById(id)
+    }
+
+    fun findByDescription(description: String): Optional<Product> {
+        return productRepository.findByDescription(description)
     }
 
 }

@@ -1,8 +1,7 @@
 package com.loshermanos.model
 
 import javax.persistence.Entity
-import javax.validation.constraints.PositiveOrZero
-import javax.validation.constraints.Size
+import com.loshermanos.service.exception.InsufficientStockException
 
 @Entity
 class Product(
@@ -28,7 +27,10 @@ class Product(
     }
 
     fun substractStock(amount: Long) {
-        stock-=amount;
+        if(stock >= amount)
+            stock-=amount;
+        else
+            throw InsufficientStockException("No tienes suficiente stock")
     }
 
 }

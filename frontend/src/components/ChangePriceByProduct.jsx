@@ -45,10 +45,18 @@ function ChangeByProduct(props) {
       <ItemCard product={p} porcentage={porcentage} aumentar={aumentar} />
     </List.Item>
   ));
-
+  const formDisabled = porcentage <= 0 || porcentage >= 100;
   const addProduct = (p) => {
     if (!products.some((e) => e.key === p.key)) setProducts(products.concat([p]));
   };
+
+  const done = (res) => {
+    props.successFeedback(`Se han cambiado ${res.length} precios`);
+    setTimeout(() => {
+      props.history.push('/products');
+    }, 2000);
+  };
+
   const postChange = () => {
     const increaseOrDecrease = aumentar ? 'increase' : 'decrease';
     const idList = products.map((p) => p.key);
@@ -58,11 +66,8 @@ function ChangeByProduct(props) {
       category: 'FERRETERIA',
     };
     API.post(`/priceChanger/${increaseOrDecrease}/all`, body)
-      .then((res) => props.successFeedback(`Se han cambiado ${res.length} precios`))
+      .then((res) => done(res))
       .catch((e) => console.log(e.response.data));
-    setTimeout(() => {
-      props.history.push('/products');
-    }, 2000);
   };
 
   if (props.visible) {
@@ -72,22 +77,28 @@ function ChangeByProduct(props) {
           <Form>
             <Form.Group widths="equal" inline>
               <Form.Input>
+                <label>Agrege productos</label>
                 <SearchByName products={props.products} onSelect={(e) => addProduct(e.result)} />
               </Form.Input>
-              <Form.Input type="number" labelPosition="right" placeholder="Porcentaje" value={porcentage} onChange={(e) => setPorcentage(e.target.value)}><input /><Label>%</Label></Form.Input>
-              <Button.Group>
-                <Button
-                  color={colorFor(aumentar)}
-                  onClick={() => setAumentar(true)}
-                >Aumentar
-                </Button>
-                <Button.Or text="O">O</Button.Or>
-                <Button
-                  color={colorFor(!aumentar)}
-                  onClick={() => setAumentar(false)}
-                >Disminuir
-                </Button>
-              </Button.Group>
+              <Form.Input error={formDisabled} label="Porcentaje:" type="number" labelPosition="right" placeholder="Porcentaje" value={porcentage} onChange={(e) => setPorcentage(e.target.value)}><input /><Label>%</Label></Form.Input>
+              <Form.Field>
+                <label>Elija una de las dos</label>
+                <Button.Group>
+                  <Button
+                    color={colorFor(aumentar)}
+                    onClick={() => setAumentar(true)}
+                    style={{ boxShadow: `${aumentar ? '-3px 3px 1px lightgray' : ''}` }}
+                  >Aumentar
+                  </Button>
+                  <Button.Or text="O">O</Button.Or>
+                  <Button
+                    color={colorFor(!aumentar)}
+                    onClick={() => setAumentar(false)}
+                    style={{ boxShadow: `${!aumentar ? '3px 3px 1px lightgray' : ''}` }}
+                  >Disminuir
+                  </Button>
+                </Button.Group>
+              </Form.Field>
             </Form.Group>
           </Form>
           <List>
@@ -95,7 +106,7 @@ function ChangeByProduct(props) {
           </List>
         </Segment>
         <div style={{ display: 'block', margin: 'auto', width: '200px' }}>
-          <Button size="big" color="green" onClick={postChange}>Finalizar</Button>
+          <Button size="big" color="green" onClick={postChange} disabled={formDisabled}>Finalizar</Button>
         </div>
       </div>
     );

@@ -8,7 +8,7 @@ export default function Products() {
     <div>
       <NavBar />
       <Container>
-        <Header as="h1">
+        <Header as="h1" style={{ width: '60%', display: 'inline-block', marginBottom: '0' }}>
           Administración de precios
         </Header>
         <hr />

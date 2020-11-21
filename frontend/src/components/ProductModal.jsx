@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 import React from 'react';
 import {
   Button, Form, Modal, Label,
@@ -16,14 +17,14 @@ const options = [
 export default function ProductModal(props) {
   const [open, setOpen] = React.useState(false);
   const [description, setDescription] = React.useState(props.add ? '' : props.product.description);
-  const [barcode, setBarcode] = React.useState(props.add ? 0 : props.product.barcode);
-  const [price, setPrice] = React.useState(props.add ? 0 : props.product.price);
+  const [barcode, setBarcode] = React.useState(props.add ? '' : props.product.barcode);
+  const [price, setPrice] = React.useState(props.add ? '' : props.product.price);
   const [stock, setStock] = React.useState(props.add ? 0 : props.product.stock);
   const [category, setCategory] = React.useState(props.add ? '' : props.product.category);
 
   const done = () => {
     setOpen(false);
-    setBarcode(0);
+    setBarcode('');
     setPrice(0);
     setStock(0);
     setDescription('');
@@ -44,9 +45,9 @@ export default function ProductModal(props) {
     if (props.add) {
       const body = {
         description,
-        barcode,
+        barcode: barcode? barcode : -1,
         category,
-        price,
+        price: parseFloat(price.toString().replace(',', '.')),
         stock,
       };
       API.post('/product', body)
@@ -56,7 +57,7 @@ export default function ProductModal(props) {
       const body = {
         id: props.product.id,
         description,
-        barcode,
+        barcode: barcode? barcode : -1,
         category,
         price,
         stock,
@@ -67,7 +68,7 @@ export default function ProductModal(props) {
     }
   };
 
-  const formEnabled = category !== '' && barcode > 0 && stock >= 0 && category && price > 0 && description;
+  const formEnabled = category !== '' && stock >= 0 && category && price > 0 && description.length > 4;
   return (
     <Modal
       onClose={() => setOpen(false)}
@@ -82,10 +83,25 @@ export default function ProductModal(props) {
         <Modal.Description>
           <Form>
             <Form.Group inline widths="equal">
-              <Form.Input fluid label="Descripción" placeholder="Descripción" value={description} onChange={(e) => setDescription(e.target.value)} />
+              <Form.Input
+                fluid
+                label="Descripción"
+                placeholder="Descripción"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                error={description.length <= 4 && description !== ''}
+              />
             </Form.Group>
             <Form.Group widths="equal">
-              <Form.Input disabled={!props.add} type="number" label="Codigo de barras" placeholder="Codigo de barras" value={barcode} onChange={(e) => setBarcode(e.target.value)} />
+              <Form.Input
+                disabled={!props.add}
+                type="number"
+                label="Codigo de barras"
+                placeholder="Codigo de barras"
+                value={barcode}
+                onChange={(e) => setBarcode(e.target.value)}
+                error={!(barcode === '' || barcode.length === 13)}
+              />
               <Form.Input
                 label="Precio"
                 placeholder="Precio"
@@ -103,6 +119,7 @@ export default function ProductModal(props) {
                 label="Stock"
                 placeholder="Stock"
                 value={stock}
+                type="number"
                 onChange={(e) => setStock(e.target.value)}
                 labelPosition="right"
               >

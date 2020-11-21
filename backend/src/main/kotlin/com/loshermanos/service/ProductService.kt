@@ -2,6 +2,7 @@ package com.loshermanos.service
 
 import com.loshermanos.controller.dto.SaleItemDTO
 import com.loshermanos.model.Product
+import com.loshermanos.model.ProductCategory
 import com.loshermanos.persistence.ProductDAO
 import com.loshermanos.service.exception.ProductAlreadyExistException
 import com.loshermanos.service.exception.ProductNotFound
@@ -9,7 +10,6 @@ import org.springframework.context.annotation.Scope
 import org.springframework.data.domain.Page
 import org.springframework.stereotype.Component
 import java.util.*
-import javax.transaction.Transactional
 
 
 @Scope(value = "session")
@@ -17,8 +17,10 @@ import javax.transaction.Transactional
 class ProductService(val productDAO: ProductDAO) {
 
     fun save(product: Product): Product {
-        if(productDAO.findByBarCode(product.barcode).isPresent)
+        if(product.barcode > 0 && productDAO.findByBarCode(product.barcode).isPresent)
             throw ProductAlreadyExistException("Ya existe un producto con ese codigo de barras")
+        if(productDAO.findByDescription(product.description).isPresent)
+            throw ProductAlreadyExistException("Ya existe un producto con ese nombre")
         return productDAO.save(product)
     }
 
@@ -41,6 +43,11 @@ class ProductService(val productDAO: ProductDAO) {
     fun update(newProduct: Product): Product{
         if (productDAO.findById(newProduct.getId()!!).isPresent)
             return productDAO.update(newProduct)
+        if(
+                productDAO.findByDescription(newProduct.description).isPresent &&
+                productDAO.findByDescription(newProduct.description).get().getId() != newProduct.getId()
+        )
+            throw ProductAlreadyExistException("Ya existe un producto con ese  nombre")
         else
             throw ProductNotFound("No existe producto con ese codigo de barras")
     }
@@ -97,5 +104,9 @@ class ProductService(val productDAO: ProductDAO) {
         val p: Product = findById(id)
         productDAO.delete(id)
         return p
+    }
+
+    fun getByCategory(category: ProductCategory): List<Product> {
+        return productDAO.getAllOfCategory(category)
     }
 }

@@ -29,7 +29,9 @@ function Search(props) {
     <div>
       <NavBar />
       <Container>
-        <Header as="h1">Resultado de la búsqueda {`"${props.location.state.searchValue}"`}</Header>
+        <Header as="h1" style={{ width: '60%', display: 'inline-block', marginBottom: '0' }}>
+          Resultado de la búsqueda {`"${props.location.state.searchValue}"`}
+        </Header>
         <hr />
         <ProductsTable
           products={products}

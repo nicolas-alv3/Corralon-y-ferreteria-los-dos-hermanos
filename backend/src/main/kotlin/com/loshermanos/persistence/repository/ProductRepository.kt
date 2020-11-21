@@ -8,10 +8,12 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import java.util.*
 
+
 interface ProductRepository : JpaRepository<Product, Long> {
 
     fun findByBarcode(barcode:Long): Optional<Product>
     fun findAllByCategory(category: ProductCategory): List<Product>
-    @Query("select p from Product p where p.description like %:data% or p.id = :data or p.barcode = :data ")
-    fun findAllByIdOrBarcodeOrDescription(data: String, pagination: Pageable): Page<Product>
+    @Query("select p from Product p where p.description like %:name% or p.barcode = :code ")
+    fun findByNameOrCode(name: String, code: Long, page: Pageable): Page<Product>
+    fun findByDescription(description: String): Optional<Product>
 }

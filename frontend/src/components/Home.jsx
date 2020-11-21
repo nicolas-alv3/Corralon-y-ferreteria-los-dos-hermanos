@@ -7,7 +7,7 @@ export default function Home(props) {
     <div className="home-background">
       <div className="home-title-container">
         <h1 className="home-title">
-          Los Hermanos
+          Los dos Hermanos
         </h1>
       </div>
       <h3 className="home-subtitle">

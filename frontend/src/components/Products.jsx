@@ -4,6 +4,7 @@ import {
 } from 'semantic-ui-react';
 import NavBar from './NavBar';
 import ProductsTable from './ProductsTable';
+import StockModal from './StockModal';
 import AddProductModal from './ProductModal';
 import WithFeedback from './Feedback';
 import API from '../service/api';
@@ -11,6 +12,7 @@ import API from '../service/api';
 function Products(props) {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
+  const [refresh, setRefresh] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
@@ -20,10 +22,10 @@ function Products(props) {
         setTotalPages(res.totalPages);
       })
       .catch((e) => console.log(e));
-  }, [page, products.length]);
+  }, [page, products.length, refresh]);
 
   const successFeedback = (message) => {
-    setProducts([]);
+    setRefresh(!refresh);
     props.successFeedback(message);
   };
 
@@ -31,14 +33,18 @@ function Products(props) {
     <div>
       <NavBar />
       <Container>
-        <Header as="h1" style={{ width: '60%', display: 'inline-block' }}>
+        <Header as="h1" style={{ display: 'inline-block', marginBottom: '0' }}>
           Productos
         </Header>
         <AddProductModal
           successFeedback={successFeedback}
           errorFeedback={props.errorFeedback}
           add
-          button={<Button circular icon="add" size="big" color="blue" style={{ float: 'right' }} />}
+          button={<Button circular icon="add" size="huge" color="blue" style={{ float: 'right',marginLeft:"20px" }} />}
+        />
+        <StockModal
+          successFeedback={successFeedback}
+          errorFeedback={props.errorFeedback}
         />
         <hr />
         <ProductsTable

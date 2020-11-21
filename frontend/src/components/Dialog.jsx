@@ -17,6 +17,7 @@ function Dialog(props) {
       trigger={props.button}
       onClose={() => setOpen(false)}
       onOpen={() => setOpen(true)}
+      size="small"
     >
       <Modal.Header>{props.title}</Modal.Header>
       <Modal.Content>

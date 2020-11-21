@@ -3,6 +3,7 @@ package com.loshermanos.controller
 import com.loshermanos.controller.dto.SaleItemDTO
 import com.loshermanos.controller.dto.StockDTO
 import com.loshermanos.model.Product
+import com.loshermanos.model.ProductCategory
 import com.loshermanos.service.ProductService
 import com.loshermanos.service.exception.InvalidProductException
 import com.loshermanos.service.exception.LosHermanosException
@@ -61,6 +62,11 @@ class ProductController (val productService: ProductService){
         return ResponseEntity(productService.getByPage(page),HttpStatus.OK)
     }
 
+    @GetMapping("/product/byCategory/{category}")
+    fun getAllByCategory(@PathVariable category: ProductCategory): ResponseEntity<List<Product>> {
+        return ResponseEntity(productService.getByCategory(category),HttpStatus.OK)
+    }
+
     @PostMapping("/product/sale")
     fun sellProducts(@RequestBody items: List<SaleItemDTO>): ResponseEntity<List<Product>> {
         return ResponseEntity(productService.sell(items),HttpStatus.OK)
@@ -80,7 +86,7 @@ class ProductController (val productService: ProductService){
         if (
             !(product.description.length >= 4 && product.description.length < 100 &&
             product.stock > 0&&
-            //product.barcode.toString().length == 13 TODO:DISABLED FOR TESTING
+            (product.barcode.toString().length == 13 || product.barcode.toInt() == -1) &&
             product.price>0)
         )
             throw InvalidProductException("Hay errores en el formulario del producto")

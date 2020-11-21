@@ -8,8 +8,11 @@
 # testing
 /coverage
 
-# production
+# production react
 /build
+
+# production electron
+/dist
 
 # misc
 .DS_Store

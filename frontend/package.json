@@ -1,25 +1,52 @@
 {
   "name": "front",
   "version": "0.1.0",
-  "private": true,
+  "main":"public/electron.js",
+  "description": "Sistema de productos y ventas de Ferreteria y Corralon los Hermanos.",
+  "author": {"name": "Nicolas Alvarez", "email": "nicolas.alv3@gmail.com"},
+  "build" : {
+    "appId":"los.hermanos"
+  },
+  "electronBuilder": {
+    "build": {
+      "productName": "Los Hermanos",
+      "appId": "los.hermanos",
+      "win": {
+        "target": ["portable"],
+        "icon" : "build/icon.png"
+      },
+      "directories": {
+        "output": "electron/output",
+        "app": "electron/app",
+        "buildResources": "electron/buildResources"
+      }
+    }
+  },
+  "homepage": "./",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.21.0",
+    "concurrently": "^5.3.0",
+    "cross-env": "^7.0.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.4",
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^2.0.0"
+    "semantic-ui-react": "^2.0.0",
+    "electron-is-dev": "^1.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
+    "react-test": "react-scripts test",
+    "react-eject": "react-scripts eject",
+    "electron-build":"electron-builder \"--win\"",
+    "build" :"npm run react-build && npm run electron-build",
+    "start" : "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\""
   },
   "browserslist": {
     "production": [
@@ -34,6 +61,9 @@
     ]
   },
   "devDependencies": {
+    "wait-on": "^5.2.0",
+    "electron": "^10.1.5",
+    "electron-builder": "^22.9.1",
     "eslint": "^6.1.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-import": "^2.18.2",

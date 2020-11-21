@@ -19,6 +19,7 @@ export default function WithFeedback(WrappedComponent) {
         this.setState({
           content: message,
           feedback: true,
+          error: false,
         });
         setTimeout(() => {
           this.setState({ feedback: false });
@@ -31,7 +32,7 @@ export default function WithFeedback(WrappedComponent) {
           error: true,
         });
         setTimeout(() => {
-          this.setState({ feedback: false });
+          this.setState({ error: false });
         }, 2000);
       };
       return (
