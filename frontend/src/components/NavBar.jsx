@@ -63,7 +63,7 @@ class NavBar extends Component {
           onClick={() => this.props.history.push('/prices')}
         />
         <Menu.Item className="navbar-search-container" position="right">
-          <Input id="navbar-search" inverted value={this.searchValue} onChange={(e) => this.handleSearchValue(e)} icon="search" placeholder="Search..." className="navbar-search" />
+          <Input id="navbar-search" inverted value={this.searchValue} onChange={(e) => this.handleSearchValue(e)} icon="search" placeholder="¿Que necesitas buscar?" className="navbar-search" />
         </Menu.Item>
       </Menu>
     );

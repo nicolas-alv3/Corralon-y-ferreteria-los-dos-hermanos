@@ -4,16 +4,8 @@ import {
   Button, Label, Form, Segment, Icon, List,
 } from 'semantic-ui-react';
 import API from '../service/api.js';
+import Category from '../objects/Category.js';
 import { parsePesos } from '../utils/utils.js';
-
-const options = [
-  { key: 'b', text: 'Bulonera', value: 'BULONERA' },
-  { key: 's', text: 'Sanitarios', value: 'SANITARIOS' },
-  { key: 'e', text: 'Electricidad', value: 'ELECTRICIDAD' },
-  { key: 'f', text: 'Ferreteria', value: 'FERRETERIA' },
-  { key: 'p', text: 'Pintureria', value: 'PINTURERIA' },
-  { key: 'v', text: 'Varios', value: 'VARIOS' },
-];
 
 const colorFor = (b) => {
   if (b) return 'blue';
@@ -83,7 +75,7 @@ function ChangeByCategory(props) {
             <Form.Group widths="equal" inline>
               <Form.Select
                 label="Seleccione la categoría: "
-                options={options}
+                options={new Category().getAllForSelector()}
                 placeholder="Categoria"
                 onChange={(e, selected) => handleChangeCategory(selected.value)}
               />

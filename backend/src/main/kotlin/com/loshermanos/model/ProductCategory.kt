@@ -6,5 +6,7 @@ enum class ProductCategory {
     ELECTRICIDAD,
     PINTURERIA,
     BULONERA,
+    CORRALON,
+    CERAMICA,
     VARIOS
 }

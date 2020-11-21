@@ -3,16 +3,8 @@ import React from 'react';
 import {
   Button, Form, Modal, Label,
 } from 'semantic-ui-react';
+import Category from '../objects/Category';
 import API from '../service/api';
-
-const options = [
-  { key: 'b', text: 'Bulonera', value: 'BULONERA' },
-  { key: 's', text: 'Sanitarios', value: 'SANITARIOS' },
-  { key: 'e', text: 'Electricidad', value: 'ELECTRICIDAD' },
-  { key: 'f', text: 'Ferreteria', value: 'FERRETERIA' },
-  { key: 'p', text: 'Pintureria', value: 'PINTURERIA' },
-  { key: 'v', text: 'Varios', value: 'VARIOS' },
-];
 
 export default function ProductModal(props) {
   const [open, setOpen] = React.useState(false);
@@ -128,7 +120,7 @@ export default function ProductModal(props) {
               </Form.Input>
               <Form.Select
                 label="Categoria"
-                options={options}
+                options={new Category().getAllForSelector()}
                 placeholder="Categoria"
                 value={category}
                 onChange={(e, selected) => setCategory(selected.value)}
