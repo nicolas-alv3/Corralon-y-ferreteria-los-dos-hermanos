@@ -14,9 +14,9 @@ class PriceChangerTest {
     lateinit var priceChanger: PriceChanger
 
     @BeforeEach fun setup(){
-        product1 = Product("product1",10.0,0,0,ProductCategory.FERRETERIA);
-        product2 = Product("product2",20.0,0,0,ProductCategory.SANITARIOS);
-        product3 = Product("product3",30.0,0,0,ProductCategory.FERRETERIA);
+        product1 = Product("product1",10.0,0,0.0,ProductCategory.FERRETERIA);
+        product2 = Product("product2",20.0,0,0.0,ProductCategory.SANITARIOS);
+        product3 = Product("product3",30.0,0,0.0,ProductCategory.FERRETERIA);
         priceChanger = PriceChanger()
 
     }

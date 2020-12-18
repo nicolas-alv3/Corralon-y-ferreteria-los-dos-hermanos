@@ -10,11 +10,11 @@ class ProductTest {
     lateinit var aProduct: Product
 
     @BeforeEach fun setup(){
-        aProduct = Product("p",10.0,0,0,ProductCategory.FERRETERIA);
+        aProduct = Product("p",10.0,0,0.0,ProductCategory.FERRETERIA);
     }
 
     @Test fun whenICreateANewProductItHasThePriceISet(){
-        val product = Product("p",10.0,0,0,ProductCategory.FERRETERIA)
+        val product = Product("p",10.0,0,0.0,ProductCategory.FERRETERIA)
 
         assertEquals(product.price,10.0)
     }
@@ -32,16 +32,16 @@ class ProductTest {
     }
 
     @Test fun givenAZeroStockProductWhenIAdd20ofStockThenItHas20ofStock(){
-        aProduct.addStock(20)
+        aProduct.addStock(20.0)
 
-        assertEquals(20,aProduct.stock)
+        assertEquals(20.0,aProduct.stock)
     }
 
     @Test fun givenA20StockProductWhenISubstract10ofStockThenItHas10ofStock(){
-        val newProduct:Product = Product("prod",50.0,0,20,ProductCategory.FERRETERIA)
+        val newProduct:Product = Product("prod",50.0,0,20.0,ProductCategory.FERRETERIA)
 
-        newProduct.substractStock(10)
+        newProduct.substractStock(10.0)
 
-        assertEquals(10,newProduct.stock)
+        assertEquals(10.0,newProduct.stock)
     }
 }

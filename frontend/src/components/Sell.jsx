@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+/* eslint-disable radix */
+import React, { useEffect, useRef } from 'react';
 import '../style/Home.css';
 import {
   Container, Form, Header, List, Label, Segment, Button, Grid, Icon, Popup,
 } from 'semantic-ui-react';
 import NavBar from './NavBar';
-import Dialog from './Dialog';
 import SearchByName from './SearchByName';
 import API from '../service/api';
 import { unparsePesos, parsePesos } from '../utils/utils';
@@ -15,6 +15,8 @@ function Sell(props) {
   const [current, setCurrent] = React.useState({ title: 'Producto', price: '$0' });
   const [selected, setSelected] = React.useState([]);
   const [amount, setAmount] = React.useState(1);
+  const amountInput = useRef(null);
+  const searchInput = useRef(null);
 
   const postSale = () => {
     const body = selected.map((s) => ({ id: s.id, amount: s.amount }));
@@ -28,13 +30,21 @@ function Sell(props) {
       .catch((e) => console.log(e));
   };
 
+  const handleShiftEnter = (e) => {
+    if (e.code === 'NumpadEnter') {
+      postSale();
+    }
+  };
+
   useEffect(() => {
+    window.addEventListener('keydown', handleShiftEnter);
     API.get('/product/all')
       .then((res) => {
         setProducts(res);
       })
       .catch((e) => console.log(e));
-  }, [products.length]);
+    return () => window.removeEventListener('keydown', handleShiftEnter);
+  }, [products.length, handleShiftEnter]);
 
   const mapRows = () => selected.map((p) => (
     <List.Item>
@@ -45,7 +55,7 @@ function Sell(props) {
               <List.Header>{p.description}</List.Header>
             </Grid.Column>
             <Grid.Column>
-              {p.amount} Unidad/es
+              {p.amount} {p.category === 'CERAMICA' ? 'm2' : 'Unidad/es'}
             </Grid.Column>
             <Grid.Column>
               {p.unitPrice} c/u.
@@ -66,24 +76,33 @@ function Sell(props) {
     if ((!selected.some((e) => e.id === current.key) && current.title !== 'Producto' && amount)) {
       if (current.stock < amount) {
         props.errorFeedback('No tienes suficiente stock para vender');
+      } else if (current.category !== 'CERAMICA' && amount - parseInt(amount) > 0) {
+        props.errorFeedback('No puedes vender este producto con cantidad decimal');
       } else {
         setSelected(selected.concat([{
           id: current.key,
           description: current.title,
           amount,
           unitPrice: current.price,
+          category : current.category,
           subtotal: Math.floor(unparsePesos(current.price) * amount),
         }]));
+        setAmount(1);
+        document.getElementById('sell-search-ref').focus();
       }
     }
   };
 
+  const updateCurrent = (e) => {
+    setCurrent(e.result);
+    amountInput.current.select();
+  };
   const renderForm = () => (
     <Segment size="large">
       <Form>
         <Form.Group inline>
           <Form.Input>
-            <SearchByName products={products} onSelect={(e) => setCurrent(e.result)} />
+            <SearchByName ref={searchInput} products={products} onSelect={updateCurrent} />
           </Form.Input>
           <Form.Input
             type="number"
@@ -93,7 +112,7 @@ function Sell(props) {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             error={amount <= 0 || amount > current.stock}
-          ><input /><Label>unidades</Label>
+          ><input ref={amountInput} /><Label>{current.category === 'CERAMICA' ? 'm2' : 'unidades'}</Label>
           </Form.Input>
           <Form.Field width={10}>
             <Segment color="orange">
@@ -146,12 +165,7 @@ function Sell(props) {
             : <div />}
         </Segment>
         <div style={{ display: 'block', margin: '30px auto', width: '200px' }}>
-          <Dialog
-            title="Confirmar?"
-            message={`Venderas ${selected.length} items a ${parsePesos(selected.reduce((ac, s) => s.subtotal + ac, 0).toString())}`}
-            callback={() => postSale()}
-            button={<Button disabled={!selected.length} color="green" size="huge">Finalizar</Button>}
-          />
+          <Button disabled={!selected.length} color="green" size="huge" onClick={postSale}>Finalizar</Button>
         </div>
       </Container>
       {props.renderError}

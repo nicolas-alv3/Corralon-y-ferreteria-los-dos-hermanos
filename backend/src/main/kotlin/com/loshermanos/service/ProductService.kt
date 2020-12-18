@@ -6,6 +6,7 @@ import com.loshermanos.model.ProductCategory
 import com.loshermanos.persistence.ProductDAO
 import com.loshermanos.service.exception.ProductAlreadyExistException
 import com.loshermanos.service.exception.ProductNotFound
+import com.loshermanos.service.exception.StockMustBeIntegerException
 import org.springframework.context.annotation.Scope
 import org.springframework.data.domain.Page
 import org.springframework.stereotype.Component
@@ -57,30 +58,31 @@ class ProductService(val productDAO: ProductDAO) {
     }
 
     fun sell(items: List<SaleItemDTO>) :List<Product>{
-        val products : List<Pair<Product, Long>> = fetchProducts(items)
+        val products : List<Pair<Product, Double>> = fetchProducts(items)
         val newProducts :List<Product> = products.map { pair -> substractAndReturn(pair) }
         return productDAO.saveAll(newProducts)
     }
 
-    private fun substractAndReturn(pair: Pair<Product, Long>): Product {
+    private fun substractAndReturn(pair: Pair<Product, Double>): Product {
         var current :Product = pair.first
         current.substractStock(pair.second)
         return current
     }
 
-    private fun fetchProducts(items: List<SaleItemDTO>): List<Pair<Product, Long>> {
+    private fun fetchProducts(items: List<SaleItemDTO>): List<Pair<Product, Double>> {
         return items.map { i -> getOrThrow(i) }
     }
 
-    private fun getOrThrow(i: SaleItemDTO): Pair<Product, Long> {
+    private fun getOrThrow(i: SaleItemDTO): Pair<Product, Double> {
         val maybeProduct : Optional<Product> = productDAO.findById(i.id)
-        if(maybeProduct.isPresent)
-            return Pair(maybeProduct.get(),i.amount)
+        if(maybeProduct.isPresent) {
+            return Pair(maybeProduct.get(), i.amount)
+        }
         else
             throw ProductNotFound("No se ha encontrado alguno de los productos vendidos")
     }
 
-    fun alterStock(id: Long, amount: Long, add: Boolean): Product {
+    fun alterStock(id: Long, amount: Double, add: Boolean): Product {
         val maybeProduct : Optional<Product> = productDAO.findById(id)
         if(maybeProduct.isPresent)
             return alterStockOfProduct(maybeProduct.get(),amount,add)
@@ -88,7 +90,7 @@ class ProductService(val productDAO: ProductDAO) {
             throw ProductNotFound("No se ha encontrado el producto a alterar")
     }
 
-    private fun alterStockOfProduct(product: Product, amount: Long, add: Boolean): Product {
+    private fun alterStockOfProduct(product: Product, amount: Double, add: Boolean): Product {
         if(add) {
             product.addStock(amount)
         } else

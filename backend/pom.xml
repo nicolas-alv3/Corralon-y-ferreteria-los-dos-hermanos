@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com</groupId>
 	<artifactId>loshermanos</artifactId>
-	<version>v1.0.0</version>
+	<version>v1.3.0</version>
 	<name>loshermanos</name>
 	<description>Sales and stock system for Ferreteria y corralon los hermanos.</description>
 

@@ -7,6 +7,7 @@ import com.loshermanos.model.ProductCategory
 import com.loshermanos.service.ProductService
 import com.loshermanos.service.exception.InvalidProductException
 import com.loshermanos.service.exception.LosHermanosException
+import com.loshermanos.service.exception.StockMustBeIntegerException
 import org.springframework.context.annotation.Scope
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
@@ -86,10 +87,16 @@ class ProductController (val productService: ProductService){
         if (
             !(product.description.length >= 4 && product.description.length < 100 &&
             product.stock > 0&&
-            (product.barcode.toString().length == 13 || product.barcode.toInt() == -1) &&
             product.price>0)
         )
             throw InvalidProductException("Hay errores en el formulario del producto")
+        if (product.category != ProductCategory.CERAMICA && hasDecimal(product.stock))
+            throw StockMustBeIntegerException("El producto " + product.description + " no puede tener stock con decimales")
+
+    }
+
+    private fun hasDecimal(n: Double): Boolean {
+        return n - n.toInt() > 0
     }
 
 }

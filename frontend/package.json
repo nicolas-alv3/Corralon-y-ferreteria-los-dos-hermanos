@@ -1,6 +1,6 @@
 {
-  "name": "front",
-  "version": "0.1.0",
+  "name": "los-dos-hermanos",
+  "version": "1.3.0",
   "main":"public/electron.js",
   "description": "Sistema de productos y ventas de Ferreteria y Corralon los Hermanos.",
   "author": {"name": "Nicolas Alvarez", "email": "nicolas.alv3@gmail.com"},

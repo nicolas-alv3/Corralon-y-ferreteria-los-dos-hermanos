@@ -1,5 +1,5 @@
 /* eslint-disable radix */
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Button, Form, Modal, Label,
 } from 'semantic-ui-react';
@@ -13,12 +13,14 @@ export default function ProductModal(props) {
   const [price, setPrice] = React.useState(props.add ? '' : props.product.price);
   const [stock, setStock] = React.useState(props.add ? 0 : props.product.stock);
   const [category, setCategory] = React.useState(props.add ? '' : props.product.category);
+  const [loading, setLoading] = React.useState(false);
 
   const done = () => {
     setOpen(false);
     setBarcode('');
     setPrice(0);
     setStock(0);
+    setLoading(false);
     setDescription('');
     setCategory('');
     if (props.add) {
@@ -30,14 +32,16 @@ export default function ProductModal(props) {
 
   const error = (e) => {
     setOpen(false);
+    setLoading(false);
     props.errorFeedback(e.response.data);
   };
 
   const postProduct = () => {
+    setLoading(true);
     if (props.add) {
       const body = {
         description,
-        barcode: barcode? barcode : -1,
+        barcode: barcode || -1,
         category,
         price: parseFloat(price.toString().replace(',', '.')),
         stock,
@@ -49,9 +53,9 @@ export default function ProductModal(props) {
       const body = {
         id: props.product.id,
         description,
-        barcode: barcode? barcode : -1,
+        barcode: barcode || -1,
         category,
-        price,
+        price: parseFloat(price.toString().replace(',', '.')),
         stock,
       };
       API.put('/product', body)
@@ -61,6 +65,18 @@ export default function ProductModal(props) {
   };
 
   const formEnabled = category !== '' && stock >= 0 && category && price > 0 && description.length > 4;
+
+  const handleEnter = (e) => {
+    if (e.keyCode === 13 && formEnabled && open) {
+      postProduct();
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleEnter);
+    return () => window.removeEventListener('keydown', handleEnter);
+  });
+
   return (
     <Modal
       onClose={() => setOpen(false)}
@@ -77,6 +93,7 @@ export default function ProductModal(props) {
             <Form.Group inline widths="equal">
               <Form.Input
                 fluid
+                autoFocus
                 label="Descripción"
                 placeholder="Descripción"
                 value={description}
@@ -92,7 +109,6 @@ export default function ProductModal(props) {
                 placeholder="Codigo de barras"
                 value={barcode}
                 onChange={(e) => setBarcode(e.target.value)}
-                error={!(barcode === '' || barcode.length === 13)}
               />
               <Form.Input
                 label="Precio"
@@ -137,6 +153,7 @@ export default function ProductModal(props) {
           content={props.add ? 'Agregar' : 'Actualizar'}
           labelPosition="right"
           icon="checkmark"
+          loading={loading}
           disabled={!formEnabled}
           onClick={postProduct}
           positive
