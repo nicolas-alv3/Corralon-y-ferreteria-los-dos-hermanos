@@ -84,7 +84,7 @@ function Sell(props) {
           description: current.title,
           amount,
           unitPrice: current.price,
-          category : current.category,
+          category: current.category,
           subtotal: Math.floor(unparsePesos(current.price) * amount),
         }]));
         setAmount(1);

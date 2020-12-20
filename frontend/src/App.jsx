@@ -7,6 +7,7 @@ import Products from './components/Products';
 import Sell from './components/Sell';
 import PricesAdmin from './components/PricesAdmin';
 import Search from './components/Search';
+import Admin from './components/Admin';
 import './App.css';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route exact path="/prices" render={(props) => <PricesAdmin {...props} />} />
         <Route exact path="/search" render={(props) => <Search {...props} />} />
         <Route exact path="/sell" render={(props) => <Sell {...props} />} />
+        <Route exact path="/admin" render={(props) => <Admin {...props} />} />
         <Route path="/" render={(props) => <Home {...props} />} />
       </Switch>
     </BrowserRouter>

@@ -28,7 +28,8 @@ export default class SearchByName extends React.Component {
           this.props.products.filter(
             (el) => el.description.toLowerCase().includes(e.target.value)
             || el.id.toString().includes(e.target.value)
-            || el.barcode.toString().includes(e.target.value),
+            || el.barcode.toString().includes(e.target.value)
+            || e.target.value.includes(el.barcode.toString()),
           ),
         ),
       });
