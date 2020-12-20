@@ -7,18 +7,26 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
 @Scope(value = "session")
-@Component(value = "scheduledService")
-class ScheduledService {
+@Component(value = "databaseService")
+class DatabaseService {
 
-    fun makeBackup():String{
+    fun makeBackup():Boolean{
         val dbUtils = DatabaseUtils()
-        dbUtils.backup("root","root","LosHermanos","backup.sql")
-        return "Backup done"
+        try{
+            dbUtils.backup("root","root","LosHermanos","backup.sql")
+        }catch (e :Exception){
+            return false
+        }
+        return return true
     }
 
-    fun restoreFromBackup(): String {
+    fun restoreFromBackup(): Boolean {
         val dbUtils = DatabaseUtils()
-        dbUtils.restore("root","root","LosHermanos","backup.sql")
-        return "Restore done"
+        try{
+            dbUtils.restore("root","root","LosHermanos","backup.sql")
+        }catch (e :Exception){
+            return false
+        }
+        return return true
     }
 }
