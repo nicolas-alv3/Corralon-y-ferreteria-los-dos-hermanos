@@ -20,6 +20,15 @@ export default class SearchByName extends React.Component {
     };
   }
 
+  parsed(input) {
+    let value = 0;
+    try {
+      // eslint-disable-next-line radix
+      value = parseInt(input);
+    } catch (error) {console.log(error)}
+    return value;
+  }
+
   handleSearchChange(e) {
     if (e) {
       this.setState({
@@ -28,8 +37,7 @@ export default class SearchByName extends React.Component {
           this.props.products.filter(
             (el) => el.description.toLowerCase().includes(e.target.value)
             || el.id.toString().includes(e.target.value)
-            || el.barcode.toString().includes(e.target.value)
-            || e.target.value.toString().includes(el.barcode.toString()),
+            || el.barcode.toString().includes(this.parsed(e.target.value)),
           ),
         ),
       });
