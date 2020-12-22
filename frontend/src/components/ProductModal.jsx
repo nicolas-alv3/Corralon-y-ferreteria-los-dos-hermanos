@@ -36,31 +36,41 @@ export default function ProductModal(props) {
     props.errorFeedback(e.response.data);
   };
 
+  const putForupdate = () => {
+    const body = {
+      id: props.product.id,
+      description,
+      barcode: barcode || -1,
+      category,
+      price: parseFloat(price.toString().replace(',', '.')),
+      stock,
+    };
+    API.put('/product', body)
+      .then((res) => done(res))
+      .catch((e) => error(e));
+  };
+
+  const postForAdding = () => {
+    const body = {
+      description,
+      barcode: barcode || -1,
+      category,
+      price: parseFloat(price.toString().replace(',', '.')),
+      stock,
+    };
+    API.post('/product', body)
+      .then((res) => done(res))
+      .catch((e) => error(e));
+  };
+
   const postProduct = () => {
     setLoading(true);
-    if (props.add) {
-      const body = {
-        description,
-        barcode: barcode || -1,
-        category,
-        price: parseFloat(price.toString().replace(',', '.')),
-        stock,
-      };
-      API.post('/product', body)
-        .then((res) => done(res))
-        .catch((e) => error(e));
-    } else {
-      const body = {
-        id: props.product.id,
-        description,
-        barcode: barcode || -1,
-        category,
-        price: parseFloat(price.toString().replace(',', '.')),
-        stock,
-      };
-      API.put('/product', body)
-        .then((res) => done(res))
-        .catch((e) => error(e));
+    if (!loading) {
+      if (props.add) {
+        postForAdding();
+      } else {
+        putForupdate();
+      }
     }
   };
 

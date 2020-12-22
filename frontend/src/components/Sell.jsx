@@ -15,19 +15,24 @@ function Sell(props) {
   const [current, setCurrent] = React.useState({ title: 'Producto', price: '$0' });
   const [selected, setSelected] = React.useState([]);
   const [amount, setAmount] = React.useState(1);
+  const [loading, setLoading] = React.useState(false);
   const amountInput = useRef(null);
   const searchInput = useRef(null);
 
   const postSale = () => {
-    const body = selected.map((s) => ({ id: s.id, amount: s.amount }));
-    API.post('/product/sale', body)
-      .then(() => {
-        props.successFeedback('Se ha vendido correctamente');
-        setTimeout(() => {
-          props.history.push('/products');
-        }, 2000);
-      })
-      .catch((e) => console.log(e));
+    if (!loading) {
+      setLoading(true);
+      const body = selected.map((s) => ({ id: s.id, amount: s.amount }));
+      API.post('/product/sale', body)
+        .then(() => {
+          props.successFeedback('Se ha vendido correctamente');
+          setLoading(false);
+          setTimeout(() => {
+            props.history.push('/products');
+          }, 2000);
+        })
+        .catch((e) => console.log(e));
+    }
   };
 
   const handleShiftEnter = (e) => {
@@ -72,21 +77,39 @@ function Sell(props) {
     </List.Item>
   ));
 
+  const addToSelected = () => {
+    setSelected(selected.concat([{
+      id: current.key,
+      description: current.title,
+      amount,
+      unitPrice: current.price,
+      category: current.category,
+      subtotal: Math.floor(unparsePesos(current.price) * amount),
+    }]));
+  };
+
+  const isValidProductToAdd = () => !selected.some((e) => e.id === current.key) && current.title !== 'Producto' && amount;
+
+  function checkStock() {
+    if (current.stock < amount) {
+      props.errorFeedback('No tienes suficiente stock para vender');
+      return true;
+    }
+    return false;
+  }
+
+  function checkIfCeramica() {
+    if (current.category !== 'CERAMICA' && amount - parseInt(amount) > 0) {
+      props.errorFeedback('No puedes vender este producto con cantidad decimal');
+      return true;
+    }
+    return false;
+  }
   const addItem = () => {
-    if ((!selected.some((e) => e.id === current.key) && current.title !== 'Producto' && amount)) {
-      if (current.stock < amount) {
-        props.errorFeedback('No tienes suficiente stock para vender');
-      } else if (current.category !== 'CERAMICA' && amount - parseInt(amount) > 0) {
-        props.errorFeedback('No puedes vender este producto con cantidad decimal');
-      } else {
-        setSelected(selected.concat([{
-          id: current.key,
-          description: current.title,
-          amount,
-          unitPrice: current.price,
-          category: current.category,
-          subtotal: Math.floor(unparsePesos(current.price) * amount),
-        }]));
+    if (isValidProductToAdd()) {
+      const thereWasAnError = checkStock() || checkIfCeramica();
+      if (!thereWasAnError) {
+        addToSelected();
         setAmount(1);
         document.getElementById('sell-search-ref').focus();
       }
@@ -165,7 +188,7 @@ function Sell(props) {
             : <div />}
         </Segment>
         <div style={{ display: 'block', margin: '30px auto', width: '200px' }}>
-          <Button disabled={!selected.length} color="green" size="huge" onClick={postSale}>Finalizar</Button>
+          <Button loading={loading} disabled={!selected.length} color="green" size="huge" onClick={postSale}>Finalizar</Button>
         </div>
       </Container>
       {props.renderError}
