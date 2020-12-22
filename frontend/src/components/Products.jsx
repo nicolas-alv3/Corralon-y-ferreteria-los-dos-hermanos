@@ -49,6 +49,7 @@ function Products(props) {
         <hr />
         <ProductsTable
           products={products}
+          page={page}
           successFeedback={successFeedback}
           errorFeedback={props.errorFeedback}
           isEmptyMessage="Aún no tienes productos. ¿Comenzamos?"

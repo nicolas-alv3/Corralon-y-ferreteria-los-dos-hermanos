@@ -17,13 +17,15 @@ function ProductsTable(props) {
       .catch((e) => props.errorFeedback(e.response.data));
   };
 
+  const offset = (props.page -1) * 10;
+
   const maprows = () => props.products.map(
     (p, index) => (
       <Table.Row
         key={p.id.toString() + p.description + p.stock.toString() + p.price.toString() + p.category}
       >
         <Table.Cell collapsing>
-          {p.barcode > 0 ? p.barcode : index + 1}
+          {p.barcode > 0 ? p.barcode : index + offset + 1}
         </Table.Cell>
         <Table.Cell>{p.description}</Table.Cell>
         <Table.Cell collapsing>
