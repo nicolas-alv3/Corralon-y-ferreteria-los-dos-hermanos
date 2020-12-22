@@ -16,7 +16,7 @@ class DatabaseUtils {
     }
 
     @Throws(IOException::class, InterruptedException::class)
-    fun restore(dbUsername: String, dbPassword: String, dbName: String, sourceFile: String): Boolean {
+    open fun restore(dbUsername: String, dbPassword: String, dbName: String, sourceFile: String): Boolean {
         val command = arrayOf(
                 "mysql",
                 "-u$dbUsername",

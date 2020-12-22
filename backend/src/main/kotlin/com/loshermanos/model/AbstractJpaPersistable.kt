@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.MappedSuperclass
 import java.io.Serializable
+import javax.persistence.GenerationType
 
 @MappedSuperclass
 abstract class AbstractJpaPersistable<T : Serializable> {

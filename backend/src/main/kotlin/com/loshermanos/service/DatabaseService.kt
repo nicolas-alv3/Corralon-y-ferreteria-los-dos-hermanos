@@ -10,23 +10,16 @@ import org.springframework.stereotype.Component
 @Component(value = "databaseService")
 class DatabaseService {
 
+    /** TODO
+     * Make this work on windows
+     * */
     fun makeBackup():Boolean{
         val dbUtils = DatabaseUtils()
-        try{
-            dbUtils.backup("root","root","LosHermanos","backup.sql")
-        }catch (e :Exception){
-            return false
-        }
-        return return true
+        return dbUtils.backup("root","root","LosHermanos","backup.sql")
     }
 
     fun restoreFromBackup(): Boolean {
         val dbUtils = DatabaseUtils()
-        try{
-            dbUtils.restore("root","root","LosHermanos","backup.sql")
-        }catch (e :Exception){
-            return false
-        }
-        return return true
+        return dbUtils.restore("root","root","LosHermanos","backup.sql")
     }
 }

@@ -17,19 +17,18 @@ import org.springframework.web.bind.annotation.RestController
 @Component(value = "ScheduledController")
 class DatabaseController(val scheduledService: DatabaseService) {
 
-    @PostMapping("/backup")
-    fun backup():ResponseEntity<String>{
+    @GetMapping("/backup")
+    fun backup(): ResponseEntity<String> {
         if(scheduledService.makeBackup()){
-            return ResponseEntity("Backup done",HttpStatus.OK)
+            return ResponseEntity("Backup successful",HttpStatus.OK)
         }
-        return ResponseEntity("There was an unexpected error during backup",HttpStatus.CONFLICT)
-
+        return ResponseEntity("There was an unexpected error during restore",HttpStatus.CONFLICT)
     }
 
-    @PostMapping("/restore")
+    @GetMapping("/restore")
     fun restore():ResponseEntity<String>{
         if(scheduledService.restoreFromBackup()){
-            return ResponseEntity("Backup restore",HttpStatus.OK)
+            return ResponseEntity("Backup restored",HttpStatus.OK)
         }
         return ResponseEntity("There was an unexpected error during restore",HttpStatus.CONFLICT)
     }
