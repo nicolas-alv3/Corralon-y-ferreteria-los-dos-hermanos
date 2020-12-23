@@ -35,6 +35,7 @@ function Search(props) {
         <hr />
         <ProductsTable
           products={products}
+          page={page}
           successFeedback={successFeedback}
           errorFeedback={props.errorFeedback}
           isEmptyMessage="No se ha encontrado resultado para su busqueda. ¿Quieres agregar alguno?"

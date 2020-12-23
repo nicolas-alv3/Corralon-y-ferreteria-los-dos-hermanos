@@ -9,9 +9,14 @@ import AddProductModal from './ProductModal';
 import WithFeedback from './Feedback';
 import API from '../service/api';
 
+const getPageFromLocalStorage = () => {
+  const page = localStorage.getItem('lastVisitedPage');
+  return page || 1;
+};
+
 function Products(props) {
   const [products, setProducts] = useState([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(getPageFromLocalStorage());
   const [refresh, setRefresh] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -29,6 +34,11 @@ function Products(props) {
     props.successFeedback(message);
   };
 
+  const changePage = (e, pages) => {
+    setPage(pages.activePage);
+    localStorage.setItem('lastVisitedPage', pages.activePage);
+  };
+
   return (
     <div>
       <NavBar />
@@ -40,7 +50,7 @@ function Products(props) {
           successFeedback={successFeedback}
           errorFeedback={props.errorFeedback}
           add
-          button={<Button circular icon="add" size="huge" color="blue" style={{ float: 'right',marginLeft:"20px" }} />}
+          button={<Button circular icon="add" size="huge" color="blue" style={{ float: 'right', marginLeft: '20px' }} />}
         />
         <StockModal
           successFeedback={successFeedback}
@@ -58,7 +68,7 @@ function Products(props) {
           <Pagination
             defaultActivePage={page}
             firstItem={null}
-            onPageChange={(e, pages) => setPage(pages.activePage)}
+            onPageChange={(e, pages) => changePage(e, pages)}
             lastItem={null}
             pointing
             secondary

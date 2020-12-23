@@ -15,3 +15,6 @@ Se le agregan las categorías *Ceramica* y *Corralon*.
 Se le agrego a la pestaña de ventas el focus automatico en el campo de busqueda,luego en cantidad y shortcuts con ENTER e INTRO.
 Ademas, se agrego stock y ventas con decimales para la categoria de ceramicas.
 
+## v1.5
+Agrega indices a los productos que no tienen codigo de barras para controlar cantidad
+

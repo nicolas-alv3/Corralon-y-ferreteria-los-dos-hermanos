@@ -36,7 +36,8 @@ function Sell(props) {
   };
 
   const handleShiftEnter = (e) => {
-    if (e.code === 'NumpadEnter') {
+    console.log(selected.length)
+    if ((e.code === 'NumpadEnter' || e.keyCode === 35) && selected.length > 0) {
       postSale();
     }
   };
@@ -49,7 +50,7 @@ function Sell(props) {
       })
       .catch((e) => console.log(e));
     return () => window.removeEventListener('keydown', handleShiftEnter);
-  }, [products.length, handleShiftEnter]);
+  }, [selected]);
 
   const mapRows = () => selected.map((p) => (
     <List.Item>
